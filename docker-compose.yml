@@ -1,0 +1,59 @@
+version: "3.9"
+
+services:
+  backend:
+    restart: always
+    build:
+      context: ./backend
+    command: >
+      sh -c "python manage.py wait_for_db && python manage.py makemigrations && python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./backend:/app/backend
+    env_file:
+      - .env
+    depends_on:
+      - db
+  db:
+    image: postgres
+    volumes:
+      - .backend/data/db:/var/lib/postgresql/data
+    environment:
+      - POSTGRES_DB=${DB_NAME}
+      - POSTGRES_USER=${DB_USER}
+      - POSTGRES_PASSWORD=${DB_PASSWORD}
+  redis:
+    image: redis
+  celery:
+    restart: always
+    build: ./backend
+    command: celery -A api worker -l info
+    volumes:
+      - ./backend:/app/backend
+    env_file:
+      - .env
+    depends_on:
+      - db
+      - redis
+      - backend
+  beat:
+    build: ./backend
+    command: celery -A api beat -l info
+    volumes:
+      - ./backend:/app/backend
+    env_file:
+      - .env
+    depends_on:
+      - celery
+  frontend:
+    restart: always
+    command: npm start
+    build:
+      context: ./frontend
+    volumes:
+      - ./frontend:/app/frontend
+    ports:
+      - "3000:3000"
+    depends_on:
+      - backend

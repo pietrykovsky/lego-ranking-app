@@ -1,0 +1,10 @@
+beautifulsoup4==4.11.1
+celery==5.2.7
+Django==4.0.7
+django-celery-beat==2.3.0
+djangorestframework==3.13.1
+drf-spectacular==0.23.1
+psycopg2-binary==2.9.3
+redis==4.3.4
+selenium==4.4.0
+django-filter==21.1
