@@ -20,10 +20,6 @@ ENV DISPLAY=:99
 WORKDIR /app/backend
 COPY requirements.txt /app/backend
 
-# COPY requirements.txt /app/backend/requirements.txt
-# COPY ./backend /app/backend
-# WORKDIR /app/backend
-
 RUN pip install --upgrade pip && \
     pip install -r requirements.txt && \
     adduser --disabled-password --no-create-home django-user && \
