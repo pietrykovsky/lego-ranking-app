@@ -21,9 +21,4 @@ WORKDIR /app/backend
 COPY requirements.txt /app/backend
 
 RUN pip install --upgrade pip && \
-    pip install -r requirements.txt && \
-    adduser --disabled-password --no-create-home django-user && \
-    chown -R django-user:django-user /app/backend && \
-    chmod -R 755 /app/backend
-
-USER django-user
+    pip install -r requirements.txt

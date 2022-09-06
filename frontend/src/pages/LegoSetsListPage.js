@@ -13,14 +13,18 @@ const LegoSetsListPage = () => {
         let response = await fetch('http://127.0.0.1/api/legosets')
         let data = await response.json()
         console.log('data: ', data)
-        setLegoSets(data)
+        setLegoSets(data.results)
     }
 
     return (
         <div>
             <div className='legosets-list'>
-                {legosets.map((legoset, index) => (
-                    <h3>{legoset.body}</h3>
+                {legosets.map(legoset => (
+                    <div>
+                        <li key = {legoset.product_id}>
+                            {legoset.title}
+                        </li>
+                    </div>
                 ))}
             </div>
         </div>
