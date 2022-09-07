@@ -1,5 +1,5 @@
-import React, {useState, useEffect} from 'react'
-import Button from 'react-bootstrap/Button'
+import React, {useState, useEffect} from 'react';
+import LegoSet from '../components/LegoSet';
 
 const LegoSetsListPage = () => {
 
@@ -10,24 +10,16 @@ const LegoSetsListPage = () => {
     }, [])
 
     let getLegoSets = async () => {
-        let response = await fetch('http://127.0.0.1/api/legosets')
+        let response = await fetch('http://127.0.0.1:8000/api/legosets')
         let data = await response.json()
         console.log('data: ', data)
         setLegoSets(data.results)
     }
 
     return (
-        <div>
-            <div className='legosets-list'>
-                {legosets.map(legoset => (
-                    <div>
-                        <li key = {legoset.product_id}>
-                            {legoset.title}
-                        </li>
-                    </div>
-                ))}
-            </div>
-        </div>
+        <div className='container-fluid'>
+            {legosets.map((legoset, index) => (<LegoSet key={index} legoset={legoset} />))}
+        </div>  
     )
 }
 
