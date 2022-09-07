@@ -1,7 +1,7 @@
 const LegoSet = ({legoset}) => {
     return (
         <a className='legoset-link' href={legoset.link}>
-            <div className='row align-items-center justify-content-center border rounded m-1 p-1'>
+            <div className='row align-items-center justify-content-center border rounded m-1 p-1 legoset-container'>
                 <div className='col-md-4 text-center'>
                     <img src={legoset.img_src} className='lego-thumbnail' alt='failed to load the image' />
                 </div>

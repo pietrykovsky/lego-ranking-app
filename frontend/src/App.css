@@ -16,8 +16,9 @@ body {
   color: #757575
 }
 
-.legoset-link div {
+.legoset-container {
   background-color: #ffffff;
+  min-height: 260px;
 }
 
 .lego-thumbnail {
