@@ -5,19 +5,29 @@ import InputGroup from 'react-bootstrap/InputGroup';
 
 const SearchBar = ({setFilters}) => {
 
-    const [search_value, setSearch] = useState('');
+    const [search_value, setSearchValue] = useState('')
 
-    const handleClick = event => {
-        console.log(search_value)
-        setFilters(prev => ({...prev, search: search_value, page: 1}))
+    const handleSubmit = event => {
+        event.preventDefault()
+        setFilters({search: search_value})
     }
+
+    useEffect(() => {
+        const params = new URLSearchParams(document.location.search)
+        if (params.has('search')) {
+            const search = params.get('search')
+            setSearchValue(search)
+        }
+    }, [])
 
     return (  
         <div>
-            <InputGroup className="mb-3">
-                <Form.Control value={search_value} onChange={event => setSearch(event.target.value)} placeholder="Wpisz frazę" aria-describedby="basic-addon2"/>
-                <Button  id="button-addon2" onClick={handleClick}>Szukaj</Button>
-            </InputGroup>  
+            <Form onSubmit={handleSubmit}>
+                <InputGroup className="mb-3">
+                    <Form.Control value={search_value} onChange={e => setSearchValue(e.target.value)} placeholder="Wpisz frazę"/>
+                    <Button type='submit'>Szukaj</Button>
+                </InputGroup>  
+            </Form>
         </div>
     );
 }

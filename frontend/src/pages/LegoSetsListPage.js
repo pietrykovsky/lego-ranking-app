@@ -3,61 +3,58 @@ import LegoSet from '../components/LegoSet';
 import Pagination from '../components/Pagination';
 import Loading from '../components/Loading';
 import Filters from '../components/Filters';
-
-const serialize = (obj) => {
-    let str = [];
-    for (let p in obj)
-        if (obj.hasOwnProperty(p)) {
-            str.push(encodeURIComponent(p) + "=" + encodeURIComponent(obj[p]));
-        }
-    return str.join("&");
-}
+import {useSearchParams} from 'react-router-dom';
 
 const LegoSetsListPage = () => {
 
     const API_URL = 'http://127.0.0.1:8000/api/'
 
+    const [search_params, setSearchParams] = useSearchParams()
     const [legosets, setLegoSets] = useState([])
     const [isLoaded, setIsLoaded] = useState(false)
-    const [filters, setFilters] = useState({
-        page: 1
-    })
     const [pagination, setPagination] = useState({})
+    const [detail, setDetail] = useState('')
 
     useEffect(() => {
-        fetchLegosets(filters)
-    }, [filters])
+        fetchLegosets()
+    }, [search_params])
 
-    const fetchLegosets = (filters) => {
-        let url = API_URL + 'legosets/';
-        if (Object.keys(filters).length) {
-            url += '?' + serialize(filters);
-        }
-        console.log(url)
-        setIsLoaded(false);
+    const fetchLegosets = () => {
+        let url = new URL(API_URL + 'legosets')
+        url.search =  new URLSearchParams(search_params).toString()
+        setIsLoaded(false)
         fetch(url)
         .then((response) => response.json())
         .then((data) => {
-            setIsLoaded(true)
+            setIsLoaded(true);
             let number_of_pages = data.count%20 === 0 ? data.count/20 : Math.ceil(data.count/20); 
             setLegoSets(data.results);
-            setPagination(pag => ({
-                ...pag,
+            setPagination(prev => ({
+                ...prev,
                 prev: data.previous,
                 next: data.next,
                 count: data.count,
                 last: number_of_pages
             }));
+            data.detail && setDetail(data.detail);
             console.log('data: ', data);
-            console.log('filters: ', filters);
         })
+        .catch()
     }
 
     return (
         <div className='container-fluid'>
-            <Filters filters={filters} setFilters={setFilters} />
-            {isLoaded ? legosets.map((legoset, index) => (<LegoSet key={index} legoset={legoset} />)) : <Loading />}
-            <Pagination pagination={pagination} current_page={filters.page} setPagination={setFilters} />
+            <Filters setFilters={setSearchParams} />
+            {isLoaded ? 
+            <>
+                {detail !== '' && 
+                <div className='row p-5 justify-content-center'>
+                    <div className='col-md-6 alert alert-danger text-center'>{detail}</div>
+                </div>}
+                {legosets?.map((legoset, index) => (<LegoSet key={index} legoset={legoset} />))}
+                <Pagination pagination={pagination} search_params={search_params} setSearchParams={setSearchParams} />
+            </> : 
+            <Loading />}
         </div> 
     )
 }
