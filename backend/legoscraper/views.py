@@ -41,6 +41,7 @@ class ThemeListView(ListAPIView):
     serializer_class = ThemeSerializer
     queryset = Theme.objects.all()
     search_fields = ['name']
+    pagination_class = None
 
 @extend_schema_view()
 class AgeCategoryListView(ListAPIView):
@@ -48,3 +49,4 @@ class AgeCategoryListView(ListAPIView):
     serializer_class = AgeCategorySerializer
     queryset = AgeCategory.objects.all()
     search_fields = ['name']
+    pagination_class = None

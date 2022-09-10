@@ -44,7 +44,7 @@ const LegoSetsListPage = () => {
 
     return (
         <div className='container-fluid'>
-            <Filters setFilters={setSearchParams} />
+            <Filters API_URL={API_URL} filters={search_params} setFilters={setSearchParams} />
             {isLoaded ? 
             <>
                 {detail !== '' && 
