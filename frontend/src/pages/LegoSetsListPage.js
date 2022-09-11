@@ -20,31 +20,38 @@ const LegoSetsListPage = () => {
     }, [search_params])
 
     const fetchLegosets = () => {
+        let isCancelled = false
         let url = new URL(API_URL + 'legosets')
         url.search =  new URLSearchParams(search_params).toString()
         setIsLoaded(false)
         fetch(url)
         .then((response) => response.json())
         .then((data) => {
-            setIsLoaded(true);
-            let number_of_pages = data.count%20 === 0 ? data.count/20 : Math.ceil(data.count/20); 
-            setLegoSets(data.results);
-            setPagination(prev => ({
-                ...prev,
-                prev: data.previous,
-                next: data.next,
-                count: data.count,
-                last: number_of_pages
-            }));
-            data.detail && setDetail(data.detail);
-            console.log('data: ', data);
+            if (!isCancelled) {
+                setIsLoaded(true);
+                let number_of_pages = data.count%20 === 0 ? data.count/20 : Math.ceil(data.count/20); 
+                setLegoSets(data.results);
+                setPagination(prev => ({
+                    ...prev,
+                    prev: data.previous,
+                    next: data.next,
+                    count: data.count,
+                    last: number_of_pages
+                }));
+                data.detail && setDetail(data.detail);
+                console.log('data: ', data);
+            }
         })
         .catch()
+
+        return () => {
+            isCancelled = true
+        }
     }
 
     return (
         <div className='container-fluid'>
-            <Filters API_URL={API_URL} filters={search_params} setFilters={setSearchParams} />
+            <Filters API_URL={API_URL} search_params={search_params} setSearchParams={setSearchParams} />
             {isLoaded ? 
             <>
                 {detail !== '' && 
