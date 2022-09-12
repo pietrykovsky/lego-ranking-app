@@ -7,7 +7,7 @@ const SearchBar = ({value, handleChange}) => {
 
     return (  
         <div>
-            <InputGroup className="mb-3">
+            <InputGroup size='lg'>
                 <Form.Control name='search' value={value} onChange={handleChange} placeholder="Wpisz frazę"/>
                 <Button type='submit'>Szukaj</Button>
             </InputGroup>  

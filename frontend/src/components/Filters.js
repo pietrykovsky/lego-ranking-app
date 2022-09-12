@@ -70,44 +70,81 @@ const Filters = ({API_URL, search_params, setSearchParams}) => {
     }, [])
 
     return (
-        <div className='row justify-content-center p-5'>   
-            <div className="d-flex-inline text-center">
-                <Button variant="primary" className="d-md-none" onClick={handleShow}>Filtruj</Button>
-                <Form onSubmit={handleSubmit}>
-                    <Sorting value={filters.ordering} handleChange={handleChange}/>
-                    
+        <div className='p-1'>
+            <div className='row justify-content-center p-1 my-3'>
+                <Form className='col-md-8 p-2' onSubmit={handleSubmit}>   
+                    <SearchBar value={filters.search} handleChange={handleChange} />    
                 </Form>
-                
             </div>
             <Offcanvas show={show} onHide={handleClose} responsive="md">
                 <Offcanvas.Header closeButton>
                     <Offcanvas.Title>Filtruj zestawy</Offcanvas.Title>
                 </Offcanvas.Header>
                 <Offcanvas.Body className="justify-content-center">
-                    <Form onSubmit={handleSubmit}>   
-                        <SearchBar value={filters.search} handleChange={handleChange} />    
-                    </Form>
-                    <Form onSubmit={handleSubmit}>
-                        <Form.Group controlId="price">
+                    <Form className='d-md-flex flex-wrap justify-content-center align-items-end filters-container' onSubmit={handleSubmit}>
+                        <Form.Group className='p-2' controlId="price">
                             <Form.Label>Cena</Form.Label>
-                            <Form.Control type='number' name='price_min' value={filters.price_min} onChange={handleChange} placeholder="Od" /> - <Form.Control type='number' value={filters.price_max} onChange={handleChange} name='price_max' placeholder="Do" />
+                            <div className='d-flex align-items-center container-range'>
+                                <div>
+                                    <Form.Control type='number' name='price_min' value={filters.price_min} onChange={handleChange} placeholder="Od" />
+                                </div>
+                                <div>
+                                    <span>&nbsp;-&nbsp;</span>
+                                </div>
+                                <div>
+                                    <Form.Control type='number' value={filters.price_max} onChange={handleChange} name='price_max' placeholder="Do" />
+                                </div>
+                            </div>
                         </Form.Group>
-                        <Form.Group controlId="elements">
+                        <Form.Group className='p-2' controlId="elements">
                             <Form.Label>Liczba elementów</Form.Label>
-                            <Form.Control type='number' name='elements_min' value={filters.elements_min} onChange={handleChange} placeholder="Od" /> - <Form.Control type='number' value={filters.elements_max} onChange={handleChange} name='elements_max' placeholder="Do" />
+                            <div className='d-flex align-items-center container-range'>
+                                <div>
+                                    <Form.Control type='number' value={filters.elements_min} onChange={handleChange} name='elements_min' placeholder="Od" />
+                                </div>
+                                <div>
+                                    <span>&nbsp;-&nbsp;</span>
+                                </div>
+                                <div>
+                                    <Form.Control type='number' value={filters.elements_max} onChange={handleChange} name='elements_max' placeholder="Do" />
+                                </div>
+                            </div>
                         </Form.Group>
-                        <Form.Group controlId="minifigures">
+                        <Form.Group className='p-2' controlId="minifigures">
                             <Form.Label>Minifigurki</Form.Label>
-                            <Form.Control type='number' name='minifigures_min' value={filters.minifigures_min} onChange={handleChange} placeholder="Od" /> - <Form.Control type='number' value={filters.minifigures_max} onChange={handleChange} name='minifigures_max' placeholder="Do" />
+                            <div className='d-flex align-items-center container-range'>
+                                <div>
+                                    <Form.Control type='number' name='minifigures_min' value={filters.minifigures_min} onChange={handleChange} placeholder="Od" />
+                                </div>
+                                <div>
+                                    <span>&nbsp;-&nbsp;</span>
+                                </div>
+                                <div>
+                                    <Form.Control type='number' value={filters.minifigures_max} onChange={handleChange} name='minifigures_max' placeholder="Do" />
+                                </div>
+                            </div>
                         </Form.Group>
+                        
                         <Select items={themes} value={filters.theme} handleChange={handleChange} parameter='theme' label='Wybierz kategorię' />
                         <Select items={age_categories} value={filters.age} handleChange={handleChange} parameter='age' label='Wybierz wiek' />
                         <Select items={availables} value={filters.available} handleChange={handleChange} parameter='available' label='Wybierz dostępność' />
-                        <Button type="submit">Filtruj</Button>
-                        <Button type='reset' onClick={handleReset}>Resetuj filtry</Button>
+                        <div className='d-flex mb-2'>
+                            <Button className='ms-3 me-1' type="submit">Filtruj</Button>
+                            <Button type='reset' onClick={handleReset}>Resetuj filtry</Button>
+                        </div>
                     </Form>
                 </Offcanvas.Body>
             </Offcanvas>
+            <div className='d-flex justify-content-between align-items-center mt-2'>
+                <div className='me-5'>
+                    <Button variant="primary" className="d-md-none" onClick={handleShow}>Filtruj</Button>
+                </div>
+                <div>
+                    <Form onSubmit={handleSubmit}>
+                        <Sorting value={filters.ordering} handleChange={handleChange}/>
+                    </Form>
+                </div>
+            </div>
         </div>
     )
 }
