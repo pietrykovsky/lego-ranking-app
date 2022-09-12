@@ -50,7 +50,7 @@ const LegoSetsListPage = () => {
     }
 
     return (
-        <div className='container-fluid'>
+        <div className='container'>
             <Filters API_URL={API_URL} search_params={search_params} setSearchParams={setSearchParams} />
             {isLoaded ? 
             <>

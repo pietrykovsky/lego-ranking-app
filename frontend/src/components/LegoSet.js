@@ -8,7 +8,7 @@ const LegoSet = ({legoset}) => {
                 <div className='col-md'>
                     <div className='d-flex justify-content-between align-items-center mt-2'>
                         <div>
-                            <h2>{legoset.title}</h2>
+                            <h2 className='fw-bold'>{legoset.title}</h2>
                         </div>
                         <div>
                             <h5>{ legoset.available ? <span className='badge text-bg-success'>Dostępny</span> : <span className='badge text-bg-danger'>Niedostępny</span>}</h5>

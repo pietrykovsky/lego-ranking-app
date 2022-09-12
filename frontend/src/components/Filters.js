@@ -71,8 +71,8 @@ const Filters = ({API_URL, search_params, setSearchParams}) => {
 
     return (
         <div className='p-1'>
-            <div className='row justify-content-center p-1 my-3'>
-                <Form className='col-md-8 p-2' onSubmit={handleSubmit}>   
+            <div className='row justify-content-center p-1 mb-5'>
+                <Form className='col-lg-6 p-2' onSubmit={handleSubmit}>   
                     <SearchBar value={filters.search} handleChange={handleChange} />    
                 </Form>
             </div>
@@ -137,7 +137,7 @@ const Filters = ({API_URL, search_params, setSearchParams}) => {
             </Offcanvas>
             <div className='d-flex justify-content-between align-items-center mt-2'>
                 <div className='me-5'>
-                    <Button variant="primary" className="d-md-none" onClick={handleShow}>Filtruj</Button>
+                    <Button variant="primary" className="d-md-none" onClick={handleShow}>Filtry</Button>
                 </div>
                 <div>
                     <Form onSubmit={handleSubmit}>
