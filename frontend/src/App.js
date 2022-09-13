@@ -5,7 +5,7 @@ import Footer from './components/Footer'
 
 function App() {
   return (
-    <div className="container-fluid main">
+    <div className="d-flex flex-column min-vh-100">
       <Header />
       <LegoSetsListPage />
       <Footer />
