@@ -22,11 +22,11 @@ const LegoSet = ({legoset}) => {
                             </div>
                         </div>
                         <div className='p-2 fs-5'>
-                            <div>Cena: {legoset.price} <span className='small'>PLN</span></div>
                             <div>Elementy: {legoset.elements}</div>
                             <div>Minifigurki: {legoset.minifigures!=null ? legoset.minifigures : "brak"}</div>
                         </div>
                         <div className='p-2 fs-5'>
+                            <div>{legoset.price} <span className='small'>PLN</span></div>
                             <strong>{legoset.price_per_element} <span className='small'>PLN/element</span></strong>
                         </div>
                     </div>

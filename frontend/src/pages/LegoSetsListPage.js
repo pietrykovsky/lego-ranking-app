@@ -13,7 +13,7 @@ const LegoSetsListPage = () => {
     const [legosets, setLegoSets] = useState([])
     const [isLoaded, setIsLoaded] = useState(false)
     const [pagination, setPagination] = useState({})
-    const [detail, setDetail] = useState('')
+    const [results, setResults] = useState('')
 
     useEffect(() => {
         fetchLegosets()
@@ -29,17 +29,19 @@ const LegoSetsListPage = () => {
         .then((data) => {
             if (!isCancelled) {
                 setIsLoaded(true);
-                let number_of_pages = data.count%20 === 0 ? data.count/20 : Math.ceil(data.count/20); 
-                setLegoSets(data.results);
-                setPagination(prev => ({
-                    ...prev,
-                    prev: data.previous,
-                    next: data.next,
-                    count: data.count,
-                    last: number_of_pages
-                }));
-                data.detail && setDetail(data.detail);
-                console.log('data: ', data);
+                if (data.hasOwnProperty('count')) {
+                    let number_of_pages = data.count%20 === 0 ? data.count/20 : Math.ceil(data.count/20); 
+                    setLegoSets(data.results);
+                    setPagination(prev => ({
+                        ...prev,
+                        prev: data.previous,
+                        next: data.next,
+                        count: data.count,
+                        last: number_of_pages
+                    }));
+                    setResults(`Znaleziono ${data.count} wyników.`)
+                } else
+                    setResults('Nie znaleziono.')
             }
         })
         .catch()
@@ -54,10 +56,11 @@ const LegoSetsListPage = () => {
             <Filters API_URL={API_URL} search_params={search_params} setSearchParams={setSearchParams} />
             {isLoaded ? 
             <>
-                {detail !== '' && 
-                <div className='row p-5 justify-content-center'>
-                    <div className='col-md-6 alert alert-danger text-center'>{detail}</div>
-                </div>}
+                <div className='row p-2 justify-content-center'>
+                    <div className='col-md-6 alert text-center'>
+                        {results}
+                    </div>
+                </div>
                 {legosets?.map((legoset, index) => (<LegoSet key={index} legoset={legoset} />))}
                 <Pagination pagination={pagination} search_params={search_params} setSearchParams={setSearchParams} />
             </> : 
