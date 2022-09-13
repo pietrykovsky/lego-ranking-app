@@ -42,7 +42,6 @@ const Filters = ({API_URL, search_params, setSearchParams}) => {
             if (value !== '')
                 params[key] = value
         setSearchParams(params)
-        console.log('filters: ', filters)
     }
 
     const handleChange = event => {

@@ -26,6 +26,7 @@ const LegoSetsListPage = () => {
         setIsLoaded(false)
         fetch(url)
         .then((response) => response.json())
+        .catch()
         .then((data) => {
             if (!isCancelled) {
                 setIsLoaded(true);
@@ -62,7 +63,7 @@ const LegoSetsListPage = () => {
                     </div>
                 </div>
                 {legosets?.map((legoset, index) => (<LegoSet key={index} legoset={legoset} />))}
-                <Pagination pagination={pagination} search_params={search_params} setSearchParams={setSearchParams} />
+                {pagination.count > 20 ? <Pagination pagination={pagination} search_params={search_params} setSearchParams={setSearchParams} /> : <div className='m-5'></div>}
             </> : 
             <Loading />}
         </div> 
