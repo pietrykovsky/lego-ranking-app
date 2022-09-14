@@ -29,7 +29,10 @@ DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(filter(None, os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')))
 
-CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_HOSTS = []
+CSRF_TRUSTED_ORIGINS = []
+CORS_ALLOW_HOSTS.extend(filter(None, os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')))
+CSRF_TRUSTED_ORIGINS.extend(filter(None, os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')))
 
 # Application definition
 INSTALLED_APPS = [
