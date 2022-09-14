@@ -7,7 +7,7 @@ import {useSearchParams} from 'react-router-dom';
 
 const LegoSetsListPage = () => {
 
-    const API_URL = 'http://127.0.0.1:8000/api/'
+    const API_URL = 'http://lego-ranking.pl/api/'
 
     const [search_params, setSearchParams] = useSearchParams()
     const [legosets, setLegoSets] = useState([])
