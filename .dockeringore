@@ -13,3 +13,8 @@ app/*/*/*/__pycache__/
 .venv/
 .env/
 venv/
+static_files
+node_modules
+frontend/node_modules
+backend/static_files
+.backend
