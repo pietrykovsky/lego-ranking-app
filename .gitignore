@@ -150,7 +150,3 @@ yarn-debug.log*
 yarn-error.log*
 
 static_files/
-
-# docker volumes
-.backend
-.backend/

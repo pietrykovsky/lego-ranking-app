@@ -24,13 +24,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY', 'CHANGE ME')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
+DEBUG = False
 
 ALLOWED_HOSTS = []
 ALLOWED_HOSTS.extend(filter(None, os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')))
 
 CORS_ALLOWED_ORIGINS = []
-CORS_ALLOWED_ORIGINS.extend(filter(None, os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')))
+CORS_ALLOWED_ORIGINS.extend(filter(None, os.environ.get('CORS', '').split(',')))
 
 # Application definition
 INSTALLED_APPS = [
