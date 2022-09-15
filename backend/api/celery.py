@@ -9,6 +9,6 @@ app.autodiscover_tasks()
 app.conf.beat_schedule = {
     'refresh_database': {
         'task': 'legoscraper.tasks.refresh_database',
-        'schedule': crontab(minute=0, hour='*/3')
+        'schedule': crontab(minute=0, hour='*/6')
     }
 }

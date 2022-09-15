@@ -23,25 +23,33 @@ def refresh_database():
     scraper = LegoScraper(themes_url)
 
     logger.info('Scraping data...')
-    scraped_sets = scraper.scrape()
+    themes_urls = scraper.scrape_themes_urls()
+    logger.info(f'Scraped themes urls: {themes_urls}')
+    for theme_url in themes_urls:
+        sets_urls = scraper.scrape_sets_urls_from_theme(theme_url)
+        logger.info(f'Scraped sets urls in {theme_url}:  {sets_urls}')
+
+        for set_url in sets_urls:
+            lego_set = scraper.scrape_set(set_url)
+            logger.info(f'Scraped lego_set in {set_url}:  {lego_set}')
+            if lego_set['elements'] != None:
+                theme, theme_created = Theme.objects.get_or_create(name=lego_set['theme'])
+                if theme_created:
+                    logger.info(f'{theme} has been added to database.')
+                lego_set['theme'] = theme
+
+                age, age_created = AgeCategory.objects.get_or_create(name=lego_set['age'])
+                if age_created:
+                    logger.info(f'{age} has been added to database.')
+                lego_set['age'] = age
+
+                lego_set['available'] = availability_string_to_bool(lego_set['available'])
+
+                lego_set_object, created = LegoSet.objects.update_or_create(product_id=lego_set['product_id'], defaults=lego_set)
+                if created:
+                    logger.info(f'{lego_set_object} has been added to database.')
+                else:
+                    logger.info(f'{lego_set_object} has been updated.')
+
     logger.info('Scraping data complete.')
-    for scraped_data in scraped_sets:
-        theme, theme_created = Theme.objects.get_or_create(name=scraped_data['theme'])
-        if theme_created:
-            logger.info(f'{theme} has been added to database.')
-        scraped_data['theme'] = theme
-
-        age, age_created = AgeCategory.objects.get_or_create(name=scraped_data['age'])
-        if age_created:
-            logger.info(f'{age} has been added to database.')
-        scraped_data['age'] = age
-
-        scraped_data['available'] = availability_string_to_bool(scraped_data['available'])
-
-        lego_set, created = LegoSet.objects.update_or_create(product_id=scraped_data['product_id'], defaults=scraped_data)
-        if created:
-            logger.info(f'{lego_set} has been added to database.')
-        else:
-            logger.info(f'{lego_set} has been updated.')
-
     logger.info('Refreshing database complete.')

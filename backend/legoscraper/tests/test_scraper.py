@@ -49,17 +49,9 @@ class ScraperTests(TestCase):
             'minifigures': None,
             'img_src': 'https://www.lego.com/cdn/cs/set/assets/bltdcfc11be71d04698/10692.jpg'
         }
+        print(fields)
         for k, v in lego_set.items():
             self.assertEqual(fields[k], v)
-
-    def test_scrape_legostore_success(self):
-        """Test scrape whole lego store from lego sets success."""
-        lego_sets = self.scraper.scrape()
-        for lego_set in lego_sets:
-            del lego_set['minifigures']
-            for k in lego_set:
-                self.assertIsNotNone(lego_set[k])
-        self.assertIsNotNone(lego_sets)
 
     def test_scrape_sets_image_success(self):
         """Test scrape set with image source success."""

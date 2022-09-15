@@ -9,10 +9,10 @@ class LegoScraper():
 
     def __init__(self, themes_url):
         self.options = webdriver.ChromeOptions()
-        self.options.add_argument(" - incognito")
-        self.options.add_argument("--headless")
-        self.options.add_argument("--disable-dev-shm-usage")
-        self.options.add_argument("--no-sandbox")
+        self.options.add_argument("incognito")
+        self.options.add_argument("headless")
+        self.options.add_argument("disable-dev-shm-usage")
+        self.options.add_argument("no-sandbox")
 
         self.path = "/usr/local/bin/chromedriver"
         self.themes_url = themes_url
@@ -88,23 +88,23 @@ class LegoScraper():
             price = None
 
         try:
-            available = soup.find(attrs={'data-test': 'product-overview-availability'}).find(class_='Markup__StyledMarkup-ar1l9g-0 gkoBeO').string
+            available = soup.find(attrs={'data-test': 'product-overview-availability'}).find('span').string
         except:
             available = None
 
         try:
-            age = soup.find(attrs={'data-test': 'ages-value'}).find(class_='Markup__StyledMarkup-ar1l9g-0 gkoBeO').string
+            age = soup.find(attrs={'data-test': 'ages-value'}).find('span').find('span').string
         except:
             age = None
 
         try:
-            elements = soup.find(attrs={'data-test': 'pieces-value'}).find(class_='Markup__StyledMarkup-ar1l9g-0 gkoBeO').string
+            elements = soup.find(attrs={'data-test': 'pieces-value'}).find('span').find('span').string
             elements = int(elements)
         except:
             elements = None
         
         try:
-            minifigures = soup.find(attrs={'data-test': 'minifigures-value'}).find(class_='Markup__StyledMarkup-ar1l9g-0 gkoBeO').string
+            minifigures = soup.find(attrs={'data-test': 'minifigures-value'}).find('span').find('span').string
             minifigures = int(minifigures)
         except:
             minifigures = None
@@ -130,20 +130,3 @@ class LegoScraper():
         }
 
         return lego_set
-        
-    def scrape(self):
-        """Scrape all sets from lego web store and return list of dictionaries with set data."""
-        list = []
-
-        themes_urls = self.scrape_themes_urls()
-
-        for theme_url in themes_urls:
-            sets_urls = self.scrape_sets_urls_from_theme(theme_url)
-
-            for set_url in sets_urls:
-                lego_set = self.scrape_set(set_url)
-
-                if lego_set['elements'] != None:
-                    list.append(lego_set)
-    
-        return list
