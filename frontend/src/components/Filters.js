@@ -33,7 +33,8 @@ const Filters = ({API_URL, search_params, setSearchParams}) => {
         event.preventDefault()
         setFilters(defaultFilters)
         setSearchParams({})
-        handleClose()
+        if (show === true)
+            setShow(false)
     }
 
     const handleSubmit = event => {
@@ -43,7 +44,8 @@ const Filters = ({API_URL, search_params, setSearchParams}) => {
             if (value !== '')
                 params[key] = value
         setSearchParams(params)
-        handleClose()
+        if (show === true)
+            setShow(false)
     }
 
     const handleChange = event => {
@@ -130,7 +132,7 @@ const Filters = ({API_URL, search_params, setSearchParams}) => {
                         <Select items={age_categories} value={filters.age} handleChange={handleChange} parameter='age' label='Wybierz wiek' />
                         <Select items={availables} value={filters.available} handleChange={handleChange} parameter='available' label='Wybierz dostępność' />
                         <div className='d-flex mb-2'>
-                            <Button className='ms-3 me-1' type="submit">Filtruj</Button>
+                            <Button className='ms-3 me-1' type="submit" onClick={handleClose}>Filtruj</Button>
                             <Button type='reset' onClick={handleReset}>Resetuj filtry</Button>
                         </div>
                     </Form>
