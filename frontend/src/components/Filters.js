@@ -33,6 +33,7 @@ const Filters = ({API_URL, search_params, setSearchParams}) => {
         event.preventDefault()
         setFilters(defaultFilters)
         setSearchParams({})
+        handleClose()
     }
 
     const handleSubmit = event => {
@@ -42,6 +43,7 @@ const Filters = ({API_URL, search_params, setSearchParams}) => {
             if (value !== '')
                 params[key] = value
         setSearchParams(params)
+        handleClose()
     }
 
     const handleChange = event => {
