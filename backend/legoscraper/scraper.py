@@ -12,7 +12,7 @@ class LegoScraper():
         self.options = webdriver.ChromeOptions()
         self.options.headless = True
         self.options.add_argument("--disable-dev-shm-usage")
-
+        self.options.add_argument("--no-sandbox")
         self.path = "/usr/local/bin/chromedriver"
         self.themes_url = themes_url
 
