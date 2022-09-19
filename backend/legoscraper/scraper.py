@@ -20,15 +20,16 @@ class LegoScraper():
 
     def get_html(self, url):
         """Retreive and return html from url."""
-        with webdriver.Chrome(self.path, chrome_options=self.options) as driver:
-            while True:
-                try:
+        while True:
+            try:
+                with webdriver.Chrome(self.path, chrome_options=self.options) as driver:
                     driver.set_page_load_timeout(30)
                     driver.get(url)
                     html = driver.page_source
-                    break
-                except TimeoutException:
-                    pass
+            except TimeoutException:
+                pass
+            else:
+                break
 
         return html
 
