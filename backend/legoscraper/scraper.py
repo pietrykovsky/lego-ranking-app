@@ -12,24 +12,16 @@ class LegoScraper():
         self.options = webdriver.ChromeOptions()
         self.options.headless = True
         self.options.add_argument("--disable-dev-shm-usage")
-        self.options.add_argument("--no-sandbox")
-        self.options.add_argument("--incognito")
 
         self.path = "/usr/local/bin/chromedriver"
         self.themes_url = themes_url
 
     def get_html(self, url):
         """Retreive and return html from url."""
-        while True:
-            try:
-                with webdriver.Chrome(self.path, chrome_options=self.options) as driver:
-                    driver.set_page_load_timeout(30)
-                    driver.get(url)
-                    html = driver.page_source
-            except TimeoutException:
-                pass
-            else:
-                break
+        with webdriver.Chrome(self.path, chrome_options=self.options) as driver:
+            driver.set_page_load_timeout(30)
+            driver.get(url)
+            html = driver.page_source
 
         return html
 
