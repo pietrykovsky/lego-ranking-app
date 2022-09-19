@@ -32,6 +32,8 @@ def refresh_database():
         for set_url in sets_urls:
             lego_set = scraper.scrape_set(set_url)
             logger.info(f'Scraped lego_set in {set_url}:  {lego_set}')
+            if lego_set['minifigures'] == None:
+                del lego_set['minifigures']
             if lego_set['elements'] != None:
                 theme, theme_created = Theme.objects.get_or_create(name=lego_set['theme'])
                 if theme_created:

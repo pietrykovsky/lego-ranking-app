@@ -1,4 +1,5 @@
 from selenium import webdriver
+from selenium.common.exceptions import TimeoutException
 
 from decimal import Decimal
 
@@ -9,10 +10,10 @@ class LegoScraper():
 
     def __init__(self, themes_url):
         self.options = webdriver.ChromeOptions()
-        self.options.add_argument("incognito")
-        self.options.add_argument("headless")
-        self.options.add_argument("disable-dev-shm-usage")
-        self.options.add_argument("no-sandbox")
+        self.options.headless = True
+        self.options.add_argument("--disable-dev-shm-usage")
+        self.options.add_argument("--no-sandbox")
+        self.options.add_argument("--incognito")
 
         self.path = "/usr/local/bin/chromedriver"
         self.themes_url = themes_url
@@ -20,8 +21,14 @@ class LegoScraper():
     def get_html(self, url):
         """Retreive and return html from url."""
         with webdriver.Chrome(self.path, chrome_options=self.options) as driver:
-            driver.get(url)
-            html = driver.page_source
+            while True:
+                try:
+                    driver.set_page_load_timeout(30)
+                    driver.get(url)
+                    html = driver.page_source
+                    break
+                except TimeoutException:
+                    pass
 
         return html
 
