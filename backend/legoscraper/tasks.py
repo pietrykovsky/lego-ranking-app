@@ -60,6 +60,8 @@ def refresh_database():
             except Exception as ex:
                 logger.warning(f"Exception {ex} has occured.")
                 logger.warning(f"Failed to add {lego_set} to the database.")
-                
+    
+    del scraper
+
     logger.info('Scraping data complete.')
     logger.info('Refreshing database complete.')

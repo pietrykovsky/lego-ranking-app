@@ -1,5 +1,6 @@
 from selenium import webdriver
-from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.firefox.service import Service
+from webdriver_manager.firefox import GeckoDriverManager
 
 from decimal import Decimal
 
@@ -9,19 +10,21 @@ class LegoScraper():
     """Lego webstore scrapper"""
 
     def __init__(self, themes_url):
-        self.options = webdriver.ChromeOptions()
+        self.options = webdriver.FirefoxOptions()
         self.options.headless = True
         self.options.add_argument("--disable-dev-shm-usage")
         self.options.add_argument("--no-sandbox")
-        self.path = "/usr/local/bin/chromedriver"
+        self.driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=self.options)
+        self.driver.set_page_load_timeout(30)
         self.themes_url = themes_url
+
+    def __del__(self):
+        self.driver.close()
 
     def get_html(self, url):
         """Retreive and return html from url."""
-        with webdriver.Chrome(self.path, chrome_options=self.options) as driver:
-            driver.set_page_load_timeout(30)
-            driver.get(url)
-            html = driver.page_source
+        self.driver.get(url)
+        html = self.driver.page_source
 
         return html
 

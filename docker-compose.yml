@@ -17,7 +17,7 @@ services:
       - db
 
   db:
-    image: postgres
+    image: postgres:14-alpine
     volumes:
       - .backend/data/db:/var/lib/postgresql/data
     environment:
@@ -26,7 +26,7 @@ services:
       - POSTGRES_PASSWORD=${DB_PASSWORD}
 
   redis:
-    image: redis
+    image: redis:7-alpine
 
   celery:
     restart: always
