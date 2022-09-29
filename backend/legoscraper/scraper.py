@@ -1,6 +1,4 @@
-from selenium import webdriver
-from selenium.webdriver.firefox.service import Service
-from webdriver_manager.firefox import GeckoDriverManager
+import requests
 
 from decimal import Decimal
 
@@ -10,37 +8,21 @@ class LegoScraper():
     """Lego webstore scrapper"""
 
     def __init__(self, themes_url):
-        self.options = webdriver.FirefoxOptions()
-        self.options.headless = True
-        self.options.add_argument("--disable-dev-shm-usage")
-        self.options.add_argument("--no-sandbox")
-        self.driver = webdriver.Firefox(service=Service(GeckoDriverManager().install()), options=self.options)
-        self.driver.set_page_load_timeout(30)
         self.themes_url = themes_url
-
-    def __del__(self):
-        self.driver.close()
 
     def get_html(self, url):
         """Retreive and return html from url."""
-        self.driver.get(url)
-        html = self.driver.page_source
+        response = requests.get(url)
+        html = response.text
 
         return html
 
-    def get_pages_count(self, url):
-        """Retrieve pages count from url."""
-        html = self.get_html(url)
+    def has_next_page(self, html):
+        """Return true if has next page and false otherwise."""
         soup = BeautifulSoup(html, 'html.parser')
-
-        pages = soup.find_all('a', class_='Paginationstyles__PageLink-npbsev-7')
-        
-        if len(pages) == 0:
-            pages_count = 1
-        else:
-            pages_count = len(pages)
-
-        return pages_count
+        if soup.find('a', attrs={'data-test': 'pagination-next'}):
+            return True
+        return False
 
     def scrape_themes_urls(self):
         """Return list of lego themes urls."""
@@ -53,14 +35,18 @@ class LegoScraper():
     def scrape_sets_urls_from_theme(self, theme_url):
         """Return list of lego sets urls from theme url."""
         list = []
-        pages_count = self.get_pages_count(theme_url)
-
-        for page in range(1, pages_count+1):
+        page = 1
+        while True:
             html = self.get_html(theme_url + f'?page={page}')
             soup = BeautifulSoup(html, 'html.parser')
 
             for link in soup.find_all('a', attrs={'data-test': "product-leaf-title-link"}):
                 list.append('https://www.lego.com' + link.get('href'))
+
+            if not self.has_next_page(html):
+                break
+
+            page += 1
 
         return list
 

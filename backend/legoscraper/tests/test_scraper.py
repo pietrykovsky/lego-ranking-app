@@ -11,16 +11,6 @@ class ScraperTests(TestCase):
         themes_url = 'https://www.lego.com/pl-pl/themes/'
         self.scraper = LegoScraper(themes_url)
 
-    def test_get_pages_count_correct(self):
-        """Test get_pages_count returns correct number of pages."""
-        url = 'https://www.lego.com/pl-pl/themes/classic'
-        classic_pages_count = self.scraper.get_pages_count(url)
-        url = 'https://www.lego.com/pl-pl/themes/speed-champions'
-        speed_pages_count = self.scraper.get_pages_count(url)
-        
-        self.assertEqual(classic_pages_count, 2)
-        self.assertEqual(speed_pages_count, 1)
-
     def test_scrape_themes_urls_success(self):
         """Test function returns list of themes urls correct."""
         urls = self.scraper.scrape_themes_urls()
