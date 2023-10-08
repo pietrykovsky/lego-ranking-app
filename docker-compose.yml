@@ -10,7 +10,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app/backend
-      - static_volume:/app/backend/static_files
+      - django_volume:/app/backend/static_files
     env_file:
       - .env
     networks:
@@ -28,6 +28,8 @@ services:
       - app-network
     ports:
       - "3000:3000"
+    volumes:
+      - static_volume:/app/frontend/build
     depends_on:
       - backend
 
@@ -85,3 +87,4 @@ networks:
 volumes:
   pgdata:
   static_volume:
+  django_volume:
