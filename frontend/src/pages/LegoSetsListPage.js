@@ -6,8 +6,7 @@ import Filters from '../components/Filters';
 import {useSearchParams} from 'react-router-dom';
 
 const LegoSetsListPage = () => {
-
-    const API_URL = 'http://lego-ranking.pl/api/'
+    const API_URL = 'http://0.0.0.0:8000/api/'
 
     const [search_params, setSearchParams] = useSearchParams()
     const [legosets, setLegoSets] = useState([])
@@ -21,7 +20,7 @@ const LegoSetsListPage = () => {
 
     const fetchLegosets = () => {
         let isCancelled = false
-        let url = new URL(API_URL + 'legosets')
+        let url = new URL(API_URL + 'legosets/')
         url.search =  new URLSearchParams(search_params).toString()
         setIsLoaded(false)
         fetch(url)
