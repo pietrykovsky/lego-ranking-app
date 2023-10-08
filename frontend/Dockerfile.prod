@@ -9,4 +9,4 @@ RUN npm install && \
 
 COPY ./ ./
 
-CMD npm run build && npm install -g serve && serve -s build
+RUN npm run build

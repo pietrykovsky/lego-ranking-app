@@ -10,6 +10,7 @@ services:
       - "8000:8000"
     volumes:
       - ./backend:/app/backend
+      - static_volume:/app/backend/static_files
     env_file:
       - .env
     networks:
@@ -83,3 +84,4 @@ networks:
 
 volumes:
   pgdata:
+  static_volume:
