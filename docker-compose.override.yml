@@ -11,7 +11,7 @@ services:
       context: ./frontend
       dockerfile: Dockerfile.dev
     environment:
-      - ENV NODE_OPTIONS=--openssl-legacy-provider
+      - NODE_OPTIONS=--openssl-legacy-provider
     volumes:
       - ./frontend:/app/frontend
 
