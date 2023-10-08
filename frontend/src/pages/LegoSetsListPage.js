@@ -6,8 +6,7 @@ import Filters from '../components/Filters';
 import {useSearchParams} from 'react-router-dom';
 
 const LegoSetsListPage = () => {
-    const BACKEND_HOST = process.env.REACT_BACKEND_HOST
-    const API_URL = '${BACKEND_HOST}/api/'
+    const API_URL = 'http://0.0.0.0:8000/api/'
 
     const [search_params, setSearchParams] = useSearchParams()
     const [legosets, setLegoSets] = useState([])
