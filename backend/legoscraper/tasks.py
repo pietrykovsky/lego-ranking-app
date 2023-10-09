@@ -1,3 +1,4 @@
+from django.db import transaction
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
@@ -14,6 +15,7 @@ def availability_string_to_bool(available):
 
     return False
 
+@transaction.atomic
 def add_legoset_to_db(lego_set):
     """Save legoset object in the database."""
     if lego_set['minifigures'] is None:
