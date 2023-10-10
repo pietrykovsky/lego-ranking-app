@@ -55,6 +55,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.prod
     command: celery -A api worker --concurrency=1 --max-tasks-per-child=1 -l info
+    init: true
     volumes:
       - ./backend:/app/backend
     env_file:
@@ -71,6 +72,7 @@ services:
       context: ./backend
       dockerfile: Dockerfile.prod
     command: celery -A api beat -l info
+    init: true
     volumes:
       - ./backend:/app/backend
     env_file:
