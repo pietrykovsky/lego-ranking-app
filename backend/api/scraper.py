@@ -8,9 +8,10 @@ from selenium import webdriver
 from selenium.webdriver.firefox.options import Options as FirefoxOptions
 from api.utils import process_image
 
+
 class LegoScraper:
     BASE_URL = "https://www.lego.com"
-    THEMES_URL = f'{BASE_URL}/pl-pl/themes'
+    THEMES_URL = f"{BASE_URL}/pl-pl/themes"
 
     @classmethod
     def _get_html(cls, url: str) -> str:
@@ -24,7 +25,7 @@ class LegoScraper:
             driver.quit()
 
         return html
-    
+
     @classmethod
     def get_image(cls, url: str) -> ImageFile:
         response = requests.get(url)
@@ -38,8 +39,7 @@ class LegoScraper:
         html = cls._get_html(cls.THEMES_URL)
         soup = BeautifulSoup(html, "html.parser")
         theme_links = [
-            f"{cls.BASE_URL}{link.get('href')}" 
-            for link in soup.find_all("a", attrs={"data-test": "themes-link"})
+            f"{cls.BASE_URL}{link.get('href')}" for link in soup.find_all("a", attrs={"data-test": "themes-link"})
         ]
         return theme_links
 
@@ -51,7 +51,7 @@ class LegoScraper:
             html = cls._get_html(f"{theme_url}?page={page}")
             soup = BeautifulSoup(html, "html.parser")
 
-            elements = soup.find_all("a", attrs={"data-test": "product-image-link"})
+            elements = soup.find_all("a", attrs={"data-test": "product-leaf-image-link"})
             if not elements:
                 break
 
@@ -72,7 +72,7 @@ class LegoScraper:
             for converter in converters:
                 content = converter(content)
             return content
-        except Exception as e:
+        except Exception:
             return None
 
     @classmethod
@@ -80,20 +80,18 @@ class LegoScraper:
         html = cls._get_html(url)
         soup = BeautifulSoup(html, "html.parser")
 
-        title = cls._extract_property(
-            soup, {"property": "og:title"},
-            [lambda x: x["content"].split("|")[0].strip()]
-        )
-        theme = cls._extract_property(
-            soup, {"property": "og:title"},
-            [lambda x: x["content"].split("|")[1].strip()]
-        )
+        title = cls._extract_property(soup, {"property": "og:title"}, [lambda x: x["content"].split("|")[0].strip()])
+        theme = cls._extract_property(soup, {"property": "og:title"}, [lambda x: x["content"].split("|")[1].strip()])
         product_id = cls._extract_property(soup, {"property": "product:retailer_item_id"}, [lambda x: x["content"]])
         price = Decimal(cls._extract_property(soup, {"property": "product:price:amount"}, [lambda x: x["content"]]))
-        available = cls._extract_property(soup, {"data-test": "product-overview-availability"}, [lambda x: x.find("span").string])
-        age = cls._extract_property(soup, {"data-test": "ages-value"}, [lambda x: x.find("span").find("span").string])
-        elements = cls._extract_property(soup, {"data-test": "pieces-value"}, [lambda x: int(x.find("span").find("span").string)])
-        minifigures = cls._extract_property(soup, {"data-test": "minifigures-value"}, [lambda x: int(x.find("span").find("span").string)])
+        available = cls._extract_property(
+            soup, {"data-test": "product-overview-availability"}, [lambda x: x.find("span").string]
+        )
+        age = cls._extract_property(soup, {"data-test": "ages-value"}, [lambda x: x.find("span").string])
+        elements = cls._extract_property(soup, {"data-test": "pieces-value"}, [lambda x: int(x.find("span").string)])
+        minifigures = cls._extract_property(
+            soup, {"data-test": "minifigures-value"}, [lambda x: int(x.find("span").string)]
+        )
         img_src = cls._extract_property(soup, {"property": "og:image"}, [lambda x: x["content"].split("?")[0]])
         img = None
 
@@ -115,4 +113,3 @@ class LegoScraper:
         }
 
         return lego_set
-    
