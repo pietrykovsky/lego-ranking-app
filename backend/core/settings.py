@@ -28,12 +28,12 @@ DEBUG = os.environ.get("DEBUG", "true").lower() == "true"
 
 if not DEBUG:
     CORS_ALLOWED_ORIGINS = []
-    CORS_ALLOWED_ORIGINS.extend(filter(None, os.environ.get('CORS', '').split(',')))
+    CORS_ALLOWED_ORIGINS.extend(filter(None, os.environ.get("CORS", "").split(",")))
     ALLOWED_HOSTS = []
-    ALLOWED_HOSTS.extend(filter(None, os.environ.get('DJANGO_ALLOWED_HOSTS', '').split(',')))
+    ALLOWED_HOSTS.extend(filter(None, os.environ.get("DJANGO_ALLOWED_HOSTS", "").split(",")))
 else:
     CORS_ALLOW_ALL_ORIGINS = True
-    ALLOWED_HOSTS = ['*']
+    ALLOWED_HOSTS = ["*"]
 
 # Application definition
 
@@ -45,7 +45,7 @@ INSTALLED_APPS = [
     "django.contrib.messages",
     "django.contrib.staticfiles",
     "api",
-    'corsheaders',
+    "corsheaders",
     "rest_framework",
     "drf_spectacular",
     "django_filters",
@@ -55,7 +55,7 @@ INSTALLED_APPS = [
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
-    'corsheaders.middleware.CorsMiddleware',
+    "corsheaders.middleware.CorsMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
     "django.contrib.auth.middleware.AuthenticationMiddleware",
@@ -90,8 +90,8 @@ WSGI_APPLICATION = "core.wsgi.application"
 POSTGRES_DB = os.environ.get("POSTGRES_DB", "postgres")
 POSTGRES_USER = os.environ.get("POSTGRES_USER", "postgres")
 POSTGRES_PASSWORD = os.environ.get("POSTGRES_PASSWORD", "postgres")
-PORT = 5432 # 5400 if DEBUG else 5432
-HOST = 'lego-ranking-db' #"localhost" if DEBUG else "lego-ranking-db"  # postgres container name from compose file
+PORT = 5400 if DEBUG else 5432
+HOST = "localhost" if DEBUG else "lego-ranking-db"  # postgres container name from compose file
 
 DATABASES = {
     "default": {
@@ -139,10 +139,10 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/5.1/howto/static-files/
 
 STATIC_URL = "static/"
-STATIC_ROOT = 'static_files/'
+STATIC_ROOT = "static_files/"
 
-MEDIA_URL = 'media/'
-MEDIA_ROOT = 'media_files/'
+MEDIA_URL = "media/"
+MEDIA_ROOT = "media_files/"
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field
@@ -151,22 +151,26 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 
 # Redis and Celery Conf
 
-CELERY_BROKER_URL = os.environ.get('REDIS_CLOUD_URL')
-CELERY_RESULT_BACKEND = os.environ.get('REDIS_CLOUD_URL')
-CELERY_BEAT_SCHEDULER = 'django_celery_beat.schedulers:DatabaseScheduler'
+CELERY_BROKER_URL = os.environ.get("REDIS_CLOUD_URL")
+CELERY_RESULT_BACKEND = os.environ.get("REDIS_CLOUD_URL")
+CELERY_BEAT_SCHEDULER = "django_celery_beat.schedulers:DatabaseScheduler"
 CELERY_TIMEZONE = TIME_ZONE
 
 # Django rest framework settings
 
 REST_FRAMEWORK = {
-    'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema',
-    'DEFAULT_FILTER_BACKENDS': ['django_filters.rest_framework.DjangoFilterBackend', 'rest_framework.filters.SearchFilter', 'rest_framework.filters.OrderingFilter'],
-    'DEFAULT_PAGINATION_CLASS': 'rest_framework.pagination.PageNumberPagination',
-    'PAGE_SIZE': 100
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
+    "DEFAULT_FILTER_BACKENDS": [
+        "django_filters.rest_framework.DjangoFilterBackend",
+        "rest_framework.filters.SearchFilter",
+        "rest_framework.filters.OrderingFilter",
+    ],
+    "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
+    "PAGE_SIZE": 100,
 }
 
 # Spectacular configuration
 
 SPECTACULAR_SETTINGS = {
-    'COMPONENT_SPLIT_REQUEST': True,
+    "COMPONENT_SPLIT_REQUEST": True,
 }
