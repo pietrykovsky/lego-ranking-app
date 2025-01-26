@@ -1,23 +1,116 @@
-### Building and running your application
+# Lego Ranking Backend
 
-When you're ready, start your application by running:
-`docker compose up --build`.
+Backend service for the Lego Ranking application built with Django REST framework. This service scrapes Lego sets data from the official Lego store, processes it, and serves it through a RESTful API.
 
-Your application will be available at http://localhost:8000.
+## Tech Stack
 
-### Deploying your application to the cloud
+- Python 3.13
+- Django 5.1
+- Django REST Framework
+- Celery
+- Redis
+- PostgreSQL
+- Docker
+- Selenium (for web scraping)
+- Poetry (dependency management)
 
-First, build your image, e.g.: `docker build -t myapp .`.
-If your cloud uses a different CPU architecture than your development
-machine (e.g., you are on a Mac M1 and your cloud provider is amd64),
-you'll want to build the image for that platform, e.g.:
-`docker build --platform=linux/amd64 -t myapp .`.
+## Features
 
-Then, push it to your registry, e.g. `docker push myregistry.com/myapp`.
+- RESTful API for Lego sets data
+- Automated data scraping from the official Lego store
+- Image processing and optimization
+- Filtering and search capabilities
+- Price per element ratio calculations
+- Periodic database updates using Celery
+- Swagger API documentation
+- Health check endpoint
+- Docker containerization
 
-Consult Docker's [getting started](https://docs.docker.com/go/get-started-sharing/)
-docs for more detail on building and pushing.
+## Prerequisites
 
-### References
+- Docker and Docker Compose
+- Python 3.13 (for local development)
+- Poetry (for local development)
 
-- [Docker's Python guide](https://docs.docker.com/language/python/)
+## Installation
+
+1. Clone the repository and navigate to the backend directory
+
+2. Create a `.env` file in the project root based on the provided example:
+
+```env
+DEBUG=false
+DJANGO_SECRET_KEY='your-secret-key'
+DJANGO_ALLOWED_HOSTS='127.0.0.1,0.0.0.0'
+CORS='http://127.0.0.1,http://0.0.0.0'
+DJANGO_SETTINGS_MODULE=core.settings
+
+REDIS_CLOUD_URL=redis://redis:6379
+
+POSTGRES_DB=your_db_name
+POSTGRES_USER=your_db_user
+POSTGRES_PASSWORD=your_db_password
+```
+
+3. Build and run the containers:
+
+```bash
+docker-compose up backend --build
+```
+
+The service will be available at `http://localhost:8000`.
+
+## Local Development
+
+1. Install dependencies:
+
+```bash
+poetry install
+```
+
+2. Run migrations:
+
+```bash
+poetry run python manage.py migrate
+```
+
+4. Start the development server:
+
+```bash
+poetry run python manage.py runserver
+```
+
+## Scheduled Tasks
+
+The application uses Celery for scheduled tasks:
+
+- Daily database refresh (scraping new data) at midnight
+- Configurable through Django admin panel at `/admin/`
+
+## Database modification
+
+To modify the database schema, make changes to the models in `core/models.py` and run the following commands:
+
+```bash
+poetry run python manage.py makemigrations
+```
+
+Then you can apply the changes:
+
+```bash
+poetry run python manage.py migrate
+```
+
+**Warning:** In order to apply the changes to the database you need to have database service running. If you are using Docker, you can run the following command to start the database service:
+
+```bash
+docker-compose up db
+```
+
+## Testing
+
+Run the test suite:
+
+```bash
+poetry run python manage.py test
+```
