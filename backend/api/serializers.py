@@ -26,7 +26,7 @@ class LegoSetSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = LegoSet
-        fields = ['title', 'product_id', 'price', 'elements', 'price_per_element','theme', 'age', 'available', 'minifigures', 'link', 'img_src']
+        fields = ['title', 'product_id', 'price', 'elements', 'price_per_element','theme', 'age', 'available', 'minifigures', 'link', 'img']
         read_only_fields = fields
 
     def get_price_per_element(self, obj):

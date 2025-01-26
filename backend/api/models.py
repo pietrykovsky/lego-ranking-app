@@ -1,5 +1,8 @@
 from django.db import models
 
+from api.utils import get_image_filename
+
+
 class LegoSet(models.Model):
     """Model for lego set objects."""
 
@@ -12,7 +15,7 @@ class LegoSet(models.Model):
     elements = models.IntegerField()
     link = models.TextField()
     minifigures = models.IntegerField(blank=True, null=True)
-    img_src = models.TextField()
+    img = models.ImageField(upload_to=get_image_filename, blank=True, null=True)
     updated = models.DateTimeField(auto_now=True)
 
     class Meta:
