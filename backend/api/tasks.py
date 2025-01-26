@@ -1,9 +1,10 @@
+from typing import Any
+
 from django.db import transaction
 from celery import shared_task
 from celery.utils.log import get_task_logger
 
 from api.scraper import LegoScraper
-
 from api.models import LegoSet, Theme, AgeCategory
 
 logger = get_task_logger(__name__)
@@ -13,7 +14,7 @@ def availability_string_to_bool(available):
     return available == 'Dostępne teraz'
 
 @transaction.atomic
-def add_legoset_to_db(lego_set):
+def add_legoset_to_db(lego_set: dict[str, Any]):
     """Save legoset object in the database."""
     if lego_set['minifigures'] is None:
         del lego_set['minifigures']
@@ -30,7 +31,12 @@ def add_legoset_to_db(lego_set):
 
         lego_set['available'] = availability_string_to_bool(lego_set['available'])
 
+        image = lego_set.pop('img', None)
+
         lego_set_object, created = LegoSet.objects.update_or_create(product_id=lego_set['product_id'], defaults=lego_set)
+        if image:
+            lego_set_object.img.save(image.name, image, save=True)
+
         if created:
             logger.info(f'{lego_set_object} has been added to database.')
         else:
@@ -40,27 +46,22 @@ def add_legoset_to_db(lego_set):
 def refresh_database():
     """Scrape data from lego store and add it to the database."""
     logger.info('Refreshing database...')
-    
-    themes_url = 'https://www.lego.com/pl-pl/themes'
-    scraper = LegoScraper(themes_url)
 
     logger.info('Scraping data...')
-    themes_urls = scraper.scrape_themes_urls()
+    themes_urls = LegoScraper.scrape_themes_urls()
     logger.info(f'Scraped themes urls: {themes_urls}')
     for theme_url in themes_urls:
-        sets_urls = scraper.scrape_sets_urls_from_theme(theme_url)
+        sets_urls = LegoScraper.scrape_sets_urls_from_theme(theme_url)
         logger.info(f'Scraped sets urls in {theme_url}:  {sets_urls}')
 
         for set_url in sets_urls:
             try:
-                lego_set = scraper.scrape_set(set_url)
+                lego_set = LegoScraper.scrape_set(set_url)
                 logger.info(f'Scraped lego_set in {set_url}:  {lego_set}')
                 add_legoset_to_db(lego_set)
             except Exception as ex:
                 logger.warning(f"Exception {ex} has occured.")
                 logger.warning(f"Failed to add {lego_set} to the database.")
-    
-    del scraper
 
     logger.info('Scraping data complete.')
     logger.info('Refreshing database complete.')
