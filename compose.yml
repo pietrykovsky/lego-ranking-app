@@ -24,22 +24,21 @@ services:
       timeout: 10s
       retries: 3
 
-  # frontend:
-  #   container_name: lego-ranking-frontend
-  #   build:
-  #     context: ./frontend
-  #     dockerfile: Dockerfile.prod
-  #   env_file:
-  #     - .env
-  #   networks:
-  #     - app-network
-  #   ports:
-  #     - "3000:3000"
-  #   volumes:
-  #     - static_volume:/app/frontend/build
-  #   depends_on:
-  #     backend:
-  #       condition: service_healthy
+  frontend:
+    container_name: lego-ranking-frontend
+    build:
+      context: ./frontend
+    env_file:
+      - .env
+    networks:
+      - app-network
+    ports:
+      - "3000:3000"
+    volumes:
+      - static_volume:/app/frontend/build
+    depends_on:
+      backend:
+        condition: service_healthy
 
   db:
     image: postgres:17-alpine
