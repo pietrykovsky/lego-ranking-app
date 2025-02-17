@@ -1,16 +1,18 @@
 "use client";
 
-import { use } from "react";
 import { LegoSet as LegoSetType } from "@/lib/types";
 import LegoSet from "@/components/lego-set";
+import Loading from "./loading";
 
-export default function LegoSetsList({ legoSetsPromise }: { legoSetsPromise: Promise<LegoSetType[]> }) {
-  const items = use(legoSetsPromise);
+function Items({ items }: { items: LegoSetType[] }) {
+  if (items.length === 0) {
+    return <div className="m-5 place-content-center text-black">Brak zestawów.</div>;
+  }
+  return items.map((item) => <LegoSet key={item.product_id} legoSet={item} />);
+}
+
+export default function LegoSetsList({ legoSets, isLoading }: { legoSets: LegoSetType[]; isLoading: boolean }) {
   return (
-    <div className="grid grid-cols-1 gap-6">
-      {items?.map((legoSet) => (
-        <LegoSet key={legoSet.product_id} legoSet={legoSet} />
-      ))}
-    </div>
+    <div className="grid grid-cols-1 gap-6 justify-center">{isLoading ? <Loading /> : <Items items={legoSets} />}</div>
   );
 }

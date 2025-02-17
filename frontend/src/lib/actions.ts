@@ -9,6 +9,8 @@ export async function getLegoSets() {
   if (!response.ok) throw new Error("Failed to fetch LEGO sets");
   const data = await response.json();
   const legosets: LegoSet[] = data.results;
+
+  await new Promise((resolve) => setTimeout(resolve, 3000));
   return legosets;
 }
 
