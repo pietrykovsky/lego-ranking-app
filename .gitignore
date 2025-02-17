@@ -6,5 +6,8 @@
 .env.production.local
 .env
 
+# next
+.next/
+
 # ide
 .vscode
