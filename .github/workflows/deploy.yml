@@ -1,0 +1,82 @@
+name: Deploy to Private Server
+
+on:
+  push:
+    tags:
+      - "v*"
+
+env:
+  DEPLOY_PATH: ${{ secrets.DEPLOY_PATH }}
+  NGINX_PATH: ${{ secrets.NGINX_PATH }}
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: "22.3.x"
+
+      - name: Create .env file
+        run: |
+          echo "POSTGRES_USER=${{ secrets.POSTGRES_USER }}" > .env
+          echo "POSTGRES_PASSWORD=${{ secrets.POSTGRES_PASSWORD }}" >> .env
+          echo "POSTGRES_DB=${{ secrets.POSTGRES_DB }}" >> .env
+          echo "SECRET_KEY=${{ secrets.SECRET_KEY }}" >> .env
+          echo "REDIS_CLOUD_URL=${{ secrets.REDIS_CLOUD_URL }}" >> .env
+          echo "DJANGO_ALLOWED_HOSTS=${{ secrets.DJANGO_ALLOWED_HOSTS }}" >> .env
+          echo "CORS=${{ secrets.CORS }}" >> .env
+          echo "DEBUG=false" >> .env
+          echo "DJANGO_SETTINGS_MODULE=core.settings" >> .env
+          echo "NODE_ENV=production" >> .env
+          echo "API_URL=http://lego-ranking-backend:8000/api"
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Build project
+        run: npm run build
+
+      - name: Install SSH Key
+        uses: shimataro/ssh-key-action@v2
+        with:
+          key: ${{ secrets.SERVER_SSH_KEY }}
+          known_hosts: ${{ secrets.KNOWN_HOSTS }}
+
+      - name: Deploy to Server
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+        run: |
+          rsync -avz --delete -e "ssh -p $SERVER_PORT" \
+            --exclude='.git' \
+            --exclude='node_modules' \
+            --exclude='__pycache__' \
+            --exclude='venv' \
+            ./ $SERVER_USER@$SERVER_IP:$DEPLOY_PATH
+
+      - name: Restart Application
+        env:
+          SERVER_IP: ${{ secrets.SERVER_IP }}
+          SERVER_USER: ${{ secrets.SERVER_USER }}
+          SERVER_PORT: ${{ secrets.SERVER_PORT }}
+        run: |
+          ssh -p $SERVER_PORT $SERVER_USER@$SERVER_IP << EOF
+            # Stop reverse proxy
+            cd $NGINX_PATH
+            docker-compose down
+
+            # Restart application
+            cd $DEPLOY_PATH
+            docker-compose down && docker-compose up -d --build
+
+            # Start reverse proxy again
+            cd $NGINX_PATH
+            docker-compose up -d
+
+            echo "Deployment completed!"
+          EOF

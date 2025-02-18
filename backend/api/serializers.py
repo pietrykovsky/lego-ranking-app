@@ -52,12 +52,13 @@ class LegoSetSerializer(serializers.ModelSerializer):
     def get_price_per_element(self, obj: LegoSet):
         """Get the price per element ratio from the object."""
         return str(obj.price_per_element)
-    
+
     def get_img(self, obj):
         """Get the relative path for the image."""
         if obj.img:
             return settings.MEDIA_URL + obj.img.name
         return None
+
 
 class HealthCheckSerializer(serializers.Serializer):
     status = serializers.CharField(read_only=True)
