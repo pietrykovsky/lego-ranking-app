@@ -4,14 +4,21 @@ import { LegoSet, Category } from "./types";
 
 const API_URL = process.env.API_URL || "http://127.0.0.1:8000/api";
 
-export async function getLegoSets() {
-  const response = await fetch(`${API_URL}/legosets`);
-  if (!response.ok) throw new Error("Failed to fetch LEGO sets");
-  const data = await response.json();
-  const legosets: LegoSet[] = data.results;
+export async function getLegoSets(): Promise<LegoSet[]> {
+  let legoSets: LegoSet[] = [];
+  let page = 1;
+  let url = `${API_URL}/legosets?page=${page}`;
 
-  await new Promise((resolve) => setTimeout(resolve, 3000));
-  return legosets;
+  do {
+    const response = await fetch(url);
+    if (!response.ok) throw new Error("Failed to fetch LEGO sets");
+    const data = await response.json();
+    legoSets = [...legoSets, ...data.results];
+    url = data.next;
+    page++;
+  } while (url != null);
+
+  return legoSets;
 }
 
 export async function getThemes() {
