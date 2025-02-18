@@ -6,7 +6,7 @@ import Loading from "./loading";
 
 function Items({ items }: { items: LegoSetType[] }) {
   if (items.length === 0) {
-    return <div className="m-5 place-content-center text-black">Brak zestawów.</div>;
+    return null;
   }
   return items.map((item) => <LegoSet key={item.product_id} legoSet={item} />);
 }

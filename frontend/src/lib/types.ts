@@ -12,21 +12,22 @@ export interface LegoSet {
   theme: Category;
   age: Category;
   available: boolean;
-  minifigures?: number;
+  minifigures: number | null;
   link: string;
   img?: string;
 }
 
 export interface Filters {
-  priceMin?: number;
-  priceMax?: number;
-  elementsMin?: number;
-  elementsMax?: number;
-  minifiguresMin?: number;
-  minifiguresMax?: number;
-  themeId?: number;
-  ageId?: number;
-  available?: boolean;
-  search?: string;
-  page?: number;
+  priceMin: number | null;
+  priceMax: number | null;
+  elementsMin: number | null;
+  elementsMax: number | null;
+  minifiguresMin: number | null;
+  minifiguresMax: number | null;
+  themeId: number | null;
+  ageId: number | null;
+  available: boolean | null;
+  search: string;
+  sort: string | null;
+  page: number;
 }
