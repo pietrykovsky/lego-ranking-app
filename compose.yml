@@ -33,7 +33,7 @@ services:
     networks:
       - app-network
     ports:
-      - "3000:3000"
+      - "3300:3000"
     volumes:
       - static_volume:/app/frontend/build
     depends_on:
