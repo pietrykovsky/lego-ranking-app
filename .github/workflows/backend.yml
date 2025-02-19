@@ -4,9 +4,11 @@ on:
   push:
     paths:
       - "backend/**"
+      - "frontend/**"
   pull_request:
     paths:
       - "backend/**"
+      - "frontend/**"
 
 jobs:
   build:
